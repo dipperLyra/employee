@@ -28,7 +28,7 @@
                     <c:if test="${employee != null}">
                         Edit Employee
                     </c:if>
-                    <c:if test="${book == null}">
+                    <c:if test="${employee == null}">
                         Add New Employee
                     </c:if>
                 </h2>
@@ -40,7 +40,7 @@
                 <th>Name: </th>
                 <td>
                     <input type="text" name="title" size="45"
-                            value="<c:out value='${employee.name}' />"
+                            value="<c:out value='${employee.firstName}' />"
                         />
                 </td>
             </tr>
@@ -48,18 +48,11 @@
                 <th>Address: </th>
                 <td>
                     <input type="text" name="author" size="45"
-                            value="<c:out value='${employee.address}' />"
+                            value="<c:out value='${employee.lastName}' />"
                     />
                 </td>
             </tr>
-            <tr>
-                <th>Email: </th>
-                <td>
-                    <input type="text" name="price" size="5"
-                            value="<c:out value='${employee.email}' />"
-                    />
-                </td>
-            </tr>
+
             <tr>
                 <td colspan="2" align="center">
                     <input type="submit" value="Save" />

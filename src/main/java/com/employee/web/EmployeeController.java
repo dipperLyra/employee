@@ -2,52 +2,59 @@ package com.employee.web;
 
 
 import com.employee.persistence.model.Employee;
-import com.employee.persistence.repository.EmployeeRepository;
 import com.employee.service.EmployeeDTO;
-import com.employee.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.employee.service.EmployeeResponse;
+import com.employee.service.EmployeeService.EmployeeService;
+import javassist.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @Controller
 @RequestMapping(path = "/api")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
-    private EmployeeService service;
+    private EmployeeService employeeService;
+
+    private EmployeeController(EmployeeService employeeService){
+        this.employeeService = employeeService;
+
+    }
 
     @PostMapping(path = "/add_employee")
-    public @ResponseBody String addEmployee(@RequestParam String firstName, @RequestParam String lastName) {
+    public @ResponseBody Employee addEmployee(@RequestParam String firstName, @RequestParam String lastName) {
 
-        Employee employee = new Employee();
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
-
-        employeeRepository.save(employee);
-        return "saved";
+        return employeeService.createEmployee(firstName, lastName);
     }
 
-    @GetMapping(path = "/list_employee")
-    public @ResponseBody Iterable<Employee> getAllEmployees(){
 
-        return employeeRepository.findAll();
+    @GetMapping(path = "/list_employees")
+    public @ResponseBody
+    List<Employee> getAllEmployees(){
+
+        return employeeService.retrieveEmployees();
     }
 
-    @GetMapping(path = "/update")
-    public @ResponseBody String updateEmployee() {
-        service.retrieveEmployees();
+    @PutMapping(path = "/update")
+    public @ResponseBody EmployeeResponse updateEmployee(@RequestParam String firstName, @RequestParam String lastName, @RequestParam int id) {
+        EmployeeDTO employeeDTO = EmployeeDTO.builder().firstName(firstName).lastName(lastName).id(id).build();
+        EmployeeResponse response = null;
+        try {
+            response = employeeService.updateEmployeeInfo(employeeDTO);
+        } catch (NotFoundException e) {
+            e.getMessage();
+        }
 
-        return "record retrieved";
+        return response;
     }
 
-    @GetMapping(path = "/delete")
+    @DeleteMapping(path = "/delete")
     public @ResponseBody String deleteEmployee(@RequestParam int id) {
 
-        employeeRepository.deleteById(id);
+        employeeService.removeEmployee(id);
 
         return "deleted";
     }

@@ -4,17 +4,17 @@ import com.employee.persistence.model.Employee;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 
-    List<Employee> findFirstName(String firstname);
+    Optional<Employee> findEmployeeByFirstName(String firstName);
 
-    List<Employee> findFirstById(Integer id);
+    List<Employee> getAllByFirstName(String firstName);
 
-    void deleteByFirstName(String firstname);
+    void deleteByFirstName(String firstName);
 
     void deleteById(Integer id);
 }
